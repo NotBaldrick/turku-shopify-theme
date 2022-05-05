@@ -1,0 +1,190 @@
+{% assign imageTopLeft = section.settings.image_top_left %}
+{% assign imageTopRight = section.settings.image_top_right %}
+{% assign imageBottomLeft = section.settings.image_bottom_left %}
+{% assign imageBottomRight = section.settings.image_bottom_right %}
+
+<div 
+  id="{{ section.id }}"
+  class="h-[75vh] grid grid-cols-2 lg:grid-cols-3 grid-rows-4 md:grid-rows-6 lg:grid-rows-2 gap-4 sm:gap-6 lg:gap-8"
+>
+  <figure
+    id="side-image"
+    class="bg-base-100 border-4 border-neutral rounded-xl shadow-xl col-start-1 row-start-4 lg:row-start-1 row-span-1 md:row-span-2 lg:row-span-1 overflow-hidden transition-transform duration-1000"
+  >
+    <img
+      class="w-full h-full object-cover object-center"
+      src="{{ imageTopLeft.src | img_url: 'large' }}"
+      alt="{{ imageTopLeft.alt }}"
+    >
+  </figure>
+  <figure
+    id="side-image"
+    class="bg-base-100 border-4 border-neutral rounded-xl shadow-xl col-start-2 lg:col-start-3 row-start-4 lg:row-start-1 row-span-1 md:row-span-2 lg:row-span-1 overflow-hidden delay-100 transition-transform duration-1000"
+  >
+    <img
+      class="w-full h-full object-cover object-center"
+      src="{{ imageTopRight.src | img_url: 'large' }}"
+      alt="{{ imageTopRight.alt }}"      
+    >
+  </figure>
+  <figure
+    id="side-image"
+    class="bg-base-100 border-4 border-neutral rounded-xl shadow-xl col-start-1 row-start-3 lg:row-start-2 row-span-1 md:row-span-2 lg:row-span-1 overflow-hidden delay-300 transition-transform duration-1000"
+  >
+    <img
+      class="w-full h-full object-cover object-center"
+      src="{{ imageBottomLeft.src | img_url: 'large' }}"
+      alt="{{ imageBottomLeft.alt }}"      
+    >
+  </figure>
+  <figure
+    id="side-image"
+    class="bg-base-100 border-4 border-neutral rounded-xl shadow-xl col-start-2 lg:col-start-3 row-start-3 lg:row-start-2 row-span-1 md:row-span-2 lg:row-span-1 overflow-hidden delay-500 transition-transform duration-1000"
+  >
+    <img
+      class="w-full h-full object-cover object-center"
+      src="{{ imageBottomRight.src | img_url: 'large' }}"
+      alt="{{ imageBottomRight.alt }}"      
+    >
+  </figure>
+  <div class="col-start-1 lg:col-start-2 col-span-2 lg:col-span-1 row-start-1 row-span-2 flex justify-center items-center">
+    <div class="lg:mb-8 text-center drop-shadow-lg flex flex-col gap-4 lg:gap-6">
+      {% for block in section.blocks %}
+        {% case block.type' %}
+          {% when 'heading' %}
+            {% assign headingText = block.settings.heading_text %}
+            <div class="text-3xl lg:text-4xl leading-snug font-bold">
+              {{ headingText }}
+            </div>
+          {% when 'main_text' %}
+            {% assign mainText = block.settings.main_text %}
+            <div class="text-xl lg:text-2xl leading-snug font-semibold">
+              {{ mainText }}
+            </div>
+          {% when 'main_button' %}
+            {% assign mainButtonText = block.settings.main_button_text %}
+            {% assign mainButtonLink = block.settings.main_button_link %}
+            <a href="{{ mainButtonLink }}">
+              <button id="main-button" class="w-auto lg:w-full btn btn-md lg:btn-xl btn-outline btn-primary text-xl lg:text-2xl font-bold">
+                {{ mainButtonText }}
+              </button>
+            </a>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const sectionID = "{{ section.id }}";
+  const el = document.getElementById(sectionID);
+  const mainButtonEl = el.querySelector("#main-button");
+  const sideImageEls = el.querySelectorAll("#side-image");
+
+  mainButtonEl.addEventListener("mouseenter", () => {
+    [...sideImageEls].forEach((sideImage) => {
+      sideImage.classList.remove("scale-100");
+      sideImage.classList.add("scale-105");
+    });
+  });
+
+  mainButtonEl.addEventListener("mouseleave", () => {
+    [...sideImageEls].forEach((sideImage) => {
+      sideImage.classList.remove("scale-105");
+      sideImage.classList.add("scale-100");
+    });
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "container",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_top_left",
+      "label": "Image top left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_top_right",
+      "label": "Image top right"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom_left",
+      "label": "Image bottom left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom_right",
+      "label": "Image bottom right"
+    }
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "name": "Heading",
+      "type": "heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading_text",
+          "label": "Heading text",
+          "default": "Black Friday Sale!!!"
+        }
+      ]
+    },
+    {
+      "name": "Main text",
+      "type": "main_text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "main_text",
+          "label": "Main text",
+          "default": "<p>Sit mollit magna aliqua <b>aute laboris</b> deserunt et minim Ex aliquip ipsum consequat officia deserunt laborum</p>"
+        }
+      ]
+    },
+    {
+      "name": "Main button",
+      "type": "main_button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "main_button_text",
+          "label": "Main button text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "main_button_link",
+          "label": "Main button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+			"blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "main_text"
+        },
+        {
+          "type": "main_button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

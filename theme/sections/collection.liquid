@@ -1,0 +1,42 @@
+<div class="container md:p-8 mb-4 md:mb-8">
+  <h1 class="text-center font-bold text-4xl md:text-6xl break-words">
+    {{ collection.title }}
+  </h1>
+</div>
+
+{% paginate collection.products by 18 %}
+<section class="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+  {% for product in collection.products %}
+    {% render 'product-card', product: product %}
+  {% endfor %}
+</section>
+  {% if paginate.pages > 1 %}
+    <nav class="w-full flex flex-row gap-4 justify-center mt-4 md:mt-8 text-2xl">
+      {% if paginate.previous.is_link %}
+        <a class="my-auto href="{{ paginate.previous.url }}">
+          {% render 'icon', 
+            type: 'chevron-double-left',
+            class: 'w-6 h-6 mt-0.5'
+          %}
+        </a>
+      {% endif %}
+      <div class="flex flex-row gap-2">
+        {% for part in paginate.parts %}
+          {% if paginate.current_page == part.title %}
+            <strong>{{ part.title | link_to: part.url}}</strong>
+            {% else %}
+            <span>{{ part.title | link_to: part.url}}</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% if paginate.next.is_link %}
+        <a class="my-auto" href="{{ paginate.next.url }}">
+          {% render 'icon', 
+            type: 'chevron-double-right',
+            class: 'w-6 h-6 mt-0.5'
+          %}
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% endpaginate %}

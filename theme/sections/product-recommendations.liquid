@@ -1,0 +1,84 @@
+<div id="{{ section.id }}">
+  <h1 class="text-3xl md:text-4xl text-center sm:text-left font-bold sm:mt-2">
+    Recommended Products
+  </h1>
+  <div
+    id="product-grid"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-3 sm:mt-6"
+  >
+    <template id="product-card">
+      <a
+        class="w-full p-4 bg-base-100 border-4 border-neutral rounded-xl flex flex-col items-center gap-2 text-center scale-100 hover:scale-105 transition-transform duration-500 cursor-pointer"
+        href="https://www.example.com"
+      >
+        <figure class="w-full aspect-square overflow-hidden border-4 border-neutral rounded-xl">
+          <img
+            class="w-full h-full object-center object-contain"
+            src="https://placekitten.com/300/500"
+          >
+        </figure>
+        <h1 class="text-3xl font-bold">£400.99</h1>
+        <h3 class="text-xl break-words max-w-full">
+          Product name goes here!
+        </h3>
+      </a>
+    </template>
+  </div>
+</div>
+
+<script>
+(function() {
+  const sectionID = "{{ section.id }}";
+  const el = document.getElementById(sectionID);
+  const productGridEl = el.querySelector("#product-grid");
+
+  const shopifyRoutesRoot = window.Shopify.routes.root;
+
+  const recommendedProducts = fetch(shopifyRoutesRoot + "recommendations/products.json?product_id={{ product.id }}&limit=4")
+    .then(res => res.json())
+    .then(({products}) => products);
+
+  const setGridCols = async () => {
+    const products = await recommendedProducts;
+    
+    if (products.length <= 3) {
+      productGridEl.classList.remove("lg:grid-cols-4");
+      productGridEl.classList.add("lg:grid-cols-3");
+    }
+  }
+  setGridCols();
+
+  const renderRecommendedProducts = async () => {
+    const products = await recommendedProducts;
+    const productCardEl = productGridEl.querySelector("#product-card").content;
+
+    products.forEach((product) => {
+      const newProductCardEl = productCardEl.cloneNode(true);
+
+      newProductCardEl.querySelector("a").href = product.url;
+      if (product.featured_image) {
+        newProductCardEl.querySelector("img").src = product.featured_image;
+      } else {
+        newProductCardEl.querySelector("img").src = "{{ 'no-image.gif' | img_url }}";
+      }
+      newProductCardEl.querySelector("h1").innerText = formatMoney(
+        product.price, 
+        "{{ localization.language.iso_code }}",
+        "{{ localization.country.currency.iso_code }}"
+      );
+      newProductCardEl.querySelector("h3").innerText = product.title;
+
+      productGridEl.appendChild(newProductCardEl);
+    });
+  };
+  renderRecommendedProducts();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Recommendations",
+  "tag": "section",
+  "class": "container"
+}
+{% endschema %}

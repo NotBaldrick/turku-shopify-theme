@@ -1,0 +1,165 @@
+{% assign cardOrder = section.settings.card_order %}
+{% assign mainProduct = section.settings.product %}
+{% assign buttonHoverText = section.settings.button_hover_text %}
+{% assign showcaseText = section.settings.showcase_text %}
+{% assign slideshowIntervalDuration = section.settings.slideshow_interval_duration %}
+
+<div 
+  id="{{ section.id }}"
+  class="h-[50rem] sm:h-[70rem] md:h-[100rem] lg:h-[40rem] grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-4 md:gap-4 lg:gap-12"
+>
+  <a
+    id="product-button"
+    class="my-6 lg:my-10 mx-6 lg:mx-0 bg-base-100 shadow-xl rounded-xl border-4 border-neutral hover:border-primary scale-100 hover:scale-110 transition-all duration-1000 cursor-pointer overflow-hidden relative {{ cardOrder }}"
+    href="{{ mainProduct.url }}"
+  >
+    <div
+      class="absolute top-0 left-0 w-full h-full opacity-0 hover:opacity-100 bg-neutral bg-opacity-0 hover:bg-opacity-25 transition-all duration-1000 flex justify-center items-center"
+    >
+      <h1 class="text-5xl text-base-100 font-semibold drop-shadow-sm text-center p-10 mb-4">
+        {{ buttonHoverText }}
+      </h1>
+    </div>
+    <img
+      class="w-full h-full object-cover object-center"
+      src="{{ mainProduct.featured_image.src | img_url: 'large' }}"
+      alt="{{ mainProduct.featured_image.alt }}"
+    >
+  </a>
+  <div class="bg-base-100 shadow-xl rounded-xl border-4 border-neutral relative overflow-hidden">
+    <div
+      class="z-10 absolute top-0 left-0 w-full h-full bg-neutral bg-opacity-25 flex justify-center items-center"
+    >
+      <h1 class="text-5xl text-base-100 font-semibold drop-shadow-sm text-center p-10 mb-4 leading-snug">
+        {{ showcaseText }}
+      </h1>
+    </div>
+    <div id="showcase-images" class="relative w-full h-full">
+      {% for image in mainProduct.images %}
+        {% unless forloop.index0 == 0 %}
+          {% if forloop.index0 == 1 %}
+            {% assign opacityClass = 'opacity-100' %}
+          {% else %}
+            {% assign opacityClass = 'opacity-0' %}
+          {% endif %}
+          <figure class="absolute top-0 left-0 w-full h-full transition-opacity duration-1000 {{ opacityClass }}">
+            <img
+              class="w-full h-full object-cover object-center"
+              src="{{ image.src | img_url: 'large' }}"
+              alt="{{ image.alt }}"
+            >
+          </figure>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const sectionID = "{{ section.id }}";
+  const el = document.getElementById(sectionID);
+  const productButtonEl = el.querySelector("#product-button");
+  const showcaseImagesEl = el.querySelector("#showcase-images");
+
+  if (showcaseImagesEl.children.length < 3) return;
+
+  let interval;
+  productButtonEl.addEventListener("mouseenter", () => {
+    let currentImageIndex = 0;
+    const imageEls = [...showcaseImagesEl.children];
+
+    interval = setInterval(() => {
+      imageEls[currentImageIndex].classList.add("opacity-100");
+      imageEls[currentImageIndex].classList.remove("opacity-0");
+
+      if (currentImageIndex === 0) {
+        imageEls[imageEls.length - 1].classList.add("opacity-0");
+        imageEls[imageEls.length - 1].classList.remove("opacity-100");
+      } else {
+        imageEls[currentImageIndex - 1].classList.add("opacity-0");
+        imageEls[currentImageIndex - 1].classList.remove("opacity-100");
+      }
+
+      currentImageIndex++
+      if (currentImageIndex === imageEls.length) {
+        currentImageIndex = 0;
+      }
+    }, parseInt("{{ slideshowIntervalDuration }}") * 1000);
+  });
+
+  productButtonEl.addEventListener("mouseleave", () => {
+    clearInterval(interval);
+    const imageEls = [...showcaseImagesEl.children];
+
+    imageEls.forEach((imageEl, index) => {
+      if (index === 0) {
+        imageEl.classList.add("opacity-100");
+        imageEl.classList.remove("opacity-0");
+      } else {
+        imageEl.classList.add("opacity-0");
+        imageEl.classList.remove("opacity-100");
+      }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Call To Action",
+  "tag": "section",
+  "class": "container",
+  "settings": [
+    {
+      "type": "radio",
+      "id": "card_order",
+      "label": "Card order",
+      "default": "order-0",
+      "options": [
+        {
+          "value": "order-0",
+          "label": "Normal"
+        },
+        {
+          "value": "order-1",
+          "label": "Reversed"
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Product needs at least 3 images."
+    },
+    {
+      "type": "text",
+      "id": "button_hover_text",
+      "label": "Button hover text",
+      "default": "Click to View Product"
+    },
+    {
+      "type": "text",
+      "id": "showcase_text",
+      "label": "Showcase text",
+      "default": "Laborum proident exercitation ipsum nisi tempor"
+    },
+    {
+      "type": "range",
+      "id": "slideshow_interval_duration",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "unit": "sec",
+      "label": "Slideshow interval duration",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Call To Action"
+    }
+  ]
+}
+{% endschema %}

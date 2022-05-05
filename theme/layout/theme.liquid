@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ shop.name }} - {{ page_title }}</title>
+  {{ 'main.css' | asset_url | stylesheet_tag }}
+  <style>
+    :root {
+      /* Primary Colors */
+      --p: {{ settings.colors_primary | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --pf: {{ settings.colors_primary | color_darken: 10 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --pc: {{ settings.colors_primary | color_lighten: 50 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Secondary Colors */
+      --s: {{ settings.colors_secondary | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --sf: {{ settings.colors_secondary | color_darken: 10 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --sc: {{ settings.colors_secondary | color_lighten: 50 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Accent Colors */
+      --a: {{ settings.colors_accent | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --af: {{ settings.colors_accent | color_darken: 10 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --ac: {{ settings.colors_accent | color_lighten: 50 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Neutral Colors */
+      --n: {{ settings.colors_neutral | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --nf: {{ settings.colors_neutral | color_darken: 10 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --nc: {{ settings.colors_neutral | color_lighten: 70 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Base Colors */
+      --b1: {{ settings.colors_base | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --b2: {{ settings.colors_base | color_darken: 20 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --b3: {{ settings.colors_base | color_darken: 40 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};       
+      --bc: {{ settings.colors_base | color_darken: 90 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Info Colors */
+      --in: {{ settings.colors_info | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --inc: {{ settings.colors_info | color_darken: 60 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Success Colors */
+      --su: {{ settings.colors_success | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --suc: {{ settings.colors_success | color_darken: 60 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Warning Colors */
+      --wa: {{ settings.colors_warning | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --wac: {{ settings.colors_warning | color_darken: 60 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      /* Error Colors */
+      --er: {{ settings.colors_error | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+      --erc: {{ settings.colors_error | color_darken: 60 | color_to_hsl | remove: 'hsl(' | remove: ',' | remove: ')' }};
+    }
+</style>
+
+  {{ content_for_header }}
+  <script src="{{ 'option_selection.js' | shopify_asset_url }}"></script>
+  <script src="{{ 'jquery.min.js' | asset_url }}"></script>
+  <script src="{{ 'cart.min.js' | asset_url }}"></script>
+  <script src="{{ 'rivets-cart.min.js' | asset_url }}"></script>
+  <script src="{{ 'javascript-debounce.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'format-money.js' | asset_url }}" defer></script>
+  <script src="{{ 'components.js' | asset_url }}" defer></script>
+  <script src="{{ 'gsap.min.js' | asset_url }}"></script>
+  <script src="{{ 'background-animation.js' | asset_url }}" defer></script>
+</head>
+<body class="debug-screens flex flex-col relative overflow-x-hidden">
+  {% section 'navbar' %}
+  <main class="text-lg">
+    {{ content_for_layout }}
+  </main>
+  {% section 'footer' %}
+</body>
+<script>
+  window.assetURLs = {
+    mainStyles: "{{ 'main.css' | asset_url }}",
+    gsap: "{{ 'gsap.min.js' | asset_url }}"
+  }
+</script>
+<script type="text/javascript">
+  jQuery(function() {
+      CartJS.init({{ cart | json }}, {
+        "moneyFormat": "{{ shop.money_format }}",
+        "moneyWithCurrencyFormat": "{{ shop.money_with_currency_format }}"
+      });
+  });
+</script>
+</html>

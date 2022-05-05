@@ -1,0 +1,21 @@
+{
+	"name": "turku-shopify-theme",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"tailwind": "npx tailwindcss -i ./src/main.css -o ./theme/assets/main.css -m --watch",
+		"shopify": "cd ./theme/ && shopify theme serve --live-reload=full-page",
+		"start": "npm-run-all --parallel tailwind shopify"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"npm-run-all": "^4.1.5",
+		"tailwindcss": "^3.0.24",
+		"tailwindcss-debug-screens": "^2.2.1"
+	},
+	"dependencies": {
+		"daisyui": "^2.14.2"
+	}
+}

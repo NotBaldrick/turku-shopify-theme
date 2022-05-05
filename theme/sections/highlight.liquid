@@ -1,0 +1,100 @@
+{% assign heading = section.settings.heading %}
+
+<div id="{{ section.id }}">
+  <h1 class="text-center text-4xl font-bold leading-snug drop-shadow-xl">
+    {{ heading }}
+  </h1>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 mt-10">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'info_card' %}
+          {% assign heading = block.settings.heading_text %}
+          {% assign description = block.settings.description_text %}
+          {% assign topCircleIconImage = block.settings.top_circle_icon_image %}
+          <div class="w-full h-full bg-base-100 border-4 border-neutral rounded-lg shadow-xl p-4 pt-8 pb-10 text-center flex flex-col gap-4 relative">
+            <div class="absolute top-[-2rem] left-0 w-full flex justify-center">
+              <figure class="w-14 h-14 p-1 bg-base-100 border-4 border-neutral rounded-full drop-shadow-md overflow-hidden">
+                <img
+                  src="{{ topCircleIconImage.src | img_url: 'small' }}"
+                  alt="{{ topCircleIconImage.alt }}"
+                >
+              </figure>
+            </div>
+            <h1 class="text-2xl font-semibold leading-snug">
+              {{ heading }}
+            </h1>
+            <div class="text-lg leading-tight">
+              {{ description }}
+            </div>
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+(function() {
+  const sectionID = "{{ section.id }}";
+  const el = document.getElementById(sectionID);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Highlight",
+  "tag": "section",
+  "class": "container",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Occaecat ut nulla adipisicing quis!!!"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Info card",
+      "type": "info_card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading_text",
+          "label": "Heading text",
+          "default": "Brand New Hand Bags!"
+        },
+        {
+          "type": "richtext",
+          "id": "description_text",
+          "label": "Description",
+          "default": "<p>Minim amet exercitation dolor <b>tempor pariatur</b> id culpa consectetur.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "top_circle_icon_image",
+          "label": "Top circle icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Highlight",
+      "blocks": [
+        {
+          "type": "info_card"
+        },
+        {
+          "type": "info_card"
+        },
+        {
+          "type": "info_card"
+        },
+        {
+          "type": "info_card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

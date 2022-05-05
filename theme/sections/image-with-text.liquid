@@ -1,0 +1,137 @@
+{% assign cardOrder = section.settings.card_order %}
+{% assign mainImage = section.settings.main_image %}
+
+<div 
+  id="{{ section.id }}"
+  class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:h-[25rem]"
+>
+  <div
+    class="flex-[3] h-full bg-base-100 border-4 border-neutral rounded-xl shadow-xl p-4 pb-6 flex flex-col justify-center gap-4 lg:gap-8 {{ cardOrder }}"
+  >
+    {% for block in section.blocks %}
+      {% case block.type' %}
+        {% when 'heading' %}
+          {% assign headingText = block.settings.heading_text %}
+          <div class="text-4xl leading-snug font-bold">
+            {{ headingText }}
+          </div>
+        {% when 'main_text' %}
+          {% assign mainText = block.settings.main_text %}
+          <div class="text-2xl leading-snug font-semibold">
+            {{ mainText }}
+          </div>
+        {% when 'main_button' %}
+          {% assign mainButtonText = block.settings.main_button_text %}
+          {% assign mainButtonLink = block.settings.main_button_link %}
+          <a href="{{ mainButtonLink }}">
+            <button 
+              id="main-button"
+              class="btn btn-outline btn-primary btn-wide text-xl md:text-2xl font-bold"
+            >
+              {{ mainButtonText }}
+            </button>
+          </a>
+      {% endcase %}
+    {% endfor %}
+  </div>
+  <div class="flex-[2] h-[25rem] lg:h-full w-full">
+    <figure class="h-full overflow-hidden bg-base-100 border-4 border-neutral rounded-xl shadow-xl">
+      <img
+        class="w-full h-full object-cover object-center"
+        src="{{ mainImage.src | img_url: 'large' }}"
+        alt="{{ mainImage.alt }}"
+      >
+    </figure>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "tag": "section",
+  "class": "container",
+  "settings": [
+    {
+      "type": "radio",
+      "id": "card_order",
+      "label": "Card order",
+      "default": "order-0",
+      "options": [
+        {
+          "value": "order-0",
+          "label": "Normal"
+        },
+        {
+          "value": "order-1",
+          "label": "Reversed"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main image"
+    }
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "name": "Heading",
+      "type": "heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading_text",
+          "label": "Heading text",
+          "default": "Brand New Hand Bags!"
+        }
+      ]
+    },
+    {
+      "name": "Main text",
+      "type": "main_text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "main_text",
+          "label": "Main text",
+          "default": "<p>Sit mollit magna aliqua <b>aute laboris</b> deserunt et minim Ex aliquip ipsum consequat officia deserunt laborum. Dolor sit amet consectetur adipisicing elit. Sint natus molestiae impedit veritatis iure repellendus dolorem voluptate soluta, adipisci obcaecati deleniti rerum! Quasi cumque unde iste culpa! Hic, debitis nesciunt.</p>"
+        }
+      ]
+    },
+    {
+      "name": "Main button",
+      "type": "main_button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "main_button_text",
+          "label": "Main button text",
+          "default": "Take A Look"
+        },
+        {
+          "type": "url",
+          "id": "main_button_link",
+          "label": "Main button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text",
+			"blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "main_text"
+        },
+        {
+          "type": "main_button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

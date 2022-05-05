@@ -1,0 +1,36 @@
+{
+  "settings_schema": {
+    "colors": {
+      "name": "Colors",
+      "settings": {
+        "primary": {
+          "label": "Primary"
+        },
+        "secondary": {
+          "label": "Secondary"
+        },
+        "accent": {
+          "label": "Accent"
+        },
+        "neutral": {
+          "label": "Neutral"
+        },
+        "base": {
+          "label": "Base"
+        },
+        "info": {
+          "label": "Info"
+        },
+        "success": {
+          "label": "Success"
+        },
+        "warning": {
+          "label": "Warning"
+        },
+        "error": {
+          "label": "Error"
+        }
+      }
+    }
+  }
+}

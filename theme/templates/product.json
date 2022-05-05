@@ -1,0 +1,31 @@
+{
+	"name": "Product",
+	"wrapper": "div.flex.flex-col.gap-4",
+	"sections": {
+		"main": {
+			"type": "product",
+			"block_order": ["product_name", "product_price", "product_options", "product_actions", "product_description"],
+			"blocks": {
+				"product_name": {
+					"type": "product_name"
+				},
+				"product_price": {
+					"type": "product_price"
+				},
+				"product_options": {
+					"type": "product_options"
+				},
+				"product_actions": {
+					"type": "product_actions"
+				},
+				"product_description": {
+					"type": "product_description"
+				}
+			}
+		},
+		"recommendations": {
+			"type": "product-recommendations"
+		}
+	},
+	"order": ["main", "recommendations"]
+}

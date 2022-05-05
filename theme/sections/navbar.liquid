@@ -1,0 +1,303 @@
+<header id="{{ section.id }}" class="shadow-lg rounded-xl border-4 border-neutral navbar bg-base-100">
+  <div class="navbar-start">
+    <button id="menu-button" class="btn btn-ghost btn-circle">
+      {% render 'icon', type: 'menu' %}
+    </button>
+  </div>
+  <div class="navbar-center">
+    <h3 class="normal-case text-xl sm:text-2xl md:text-3xl font-extrabold">{{ shop.name }}</h3>
+  </div>
+  <div class="navbar-end">
+    <button id="search-button" class="btn btn-ghost btn-circle relative">
+      {% render 'icon', type: 'search' %}
+    </button>
+    <button id="cart-button" class="btn btn-ghost btn-circle relative">
+      <div
+        id="item-count"
+        class="text-sm text-base-content font-bold absolute top-[-5px] left-[65%]"
+      >
+        0
+      </div>
+      {% render 'icon', type: 'shopping-bag' %}
+    </button>
+  </div>
+</header>
+
+<component-sidebar id="menu-sidebar" side="left" class="hidden">
+  <slot slot="top">
+    <h3 class="text-3xl font-bold truncate">
+      Main Menu
+    </h3>
+  </slot>
+  
+  <nav>
+    <ul class="menu bg-base-100 w-full">
+      {% for link in linklists.main-menu.links %}
+        <li>
+          <a
+            class="rounded-xl text-xl truncate block w-full"
+            href="{{ link.url }}"
+          >
+            {{ link.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  <slot slot="bottom">
+    <h3 class="text-xl font-bold truncate">
+      {{ shop.name }}
+    </h3>
+  </slot>
+</component-sidebar>
+
+<component-sidebar id="cart-sidebar" side="right" class="hidden">
+  <slot slot="top">
+    <h3 class="text-3xl font-bold truncate">
+      Your Cart
+    </h3>
+  </slot>
+
+  <ul id="cart-item-wrapper">
+    <template id="cart-item">
+      <li class="w-full">
+        <div class="h-24 flex flex-row gap-2">
+          <figure class="h-full aspect-square overflow-hidden rounded-xl border-4 border-neutral">
+            <img 
+              class="w-full h-full object-cover object-center"
+              src="https://placekitten.com/300/500"
+            />
+          </figure>
+          <div class="flex-1 grid grid-rows-3">
+            <div class="truncate">
+              <span id="item-quantity" class="font-semibold">1x</span>
+              <span id="item-name">Product Name</span>
+            </div>
+            <div id="item-variant" class="truncate">Variants</div>
+            <div class="flex justify-between h-fit">
+              <div id="item-price" class="truncate font-bold">£99.42 Each</div>
+              <button id="item-delete-button" class="btn btn-xs btn-error btn-ghost text-error gap-1">
+                {% render 'icon', type: 'trash', class: 'w-5 md:w-4 h-5 md:h-4' %}
+                <span class="hidden md:block">Remove</span> 
+              </button>
+            </div>
+          </div>
+        </div>
+        <hr class="divider divider-vertical" >
+      </li>
+    </template>
+  </ul>
+
+  <slot slot="bottom">
+    <div class="flex justify-between mb-4 text-xl font-bold">
+      <span>Subtotal:</span>
+      <span id="subtotal-price">$300</span>
+    </div>
+    <a href="/checkout">
+      <button class="btn btn-outline btn-primary btn-xl w-full">
+        Checkout
+      </button>
+    </a>
+  </slot>
+</component-sidebar>
+
+<component-modal id="search-modal" class="hidden">
+  <input 
+    type="text"
+    placeholder="Search Products"
+    class="input w-full text-xl focus:outline-none"
+  >
+  <hr class="divider divider-vertical my-1" />
+  <div id="results-wrapper" class="max-h-96 overflow-y-auto">
+    <template id="result-item">
+      <div class="h-20 md:h-32 flex gap-3 overflow-hidden relative p-0.5 md:p-2">
+        <a
+          id="overlay"
+          class="absolute top-0 left-0 w-full h-full bg-neutral bg-opacity-25 rounded-xl cursor-pointer transition-opacity duration-500 opacity-0 hover:opacity-100"
+        >
+        </a>
+        <figure class="h-full aspect-square overflow-hidden border-4 border-neutral rounded-xl">
+          <img
+            id="main-image"
+            class="w-full h-full object-center object-cover" 
+            src="https://placekitten.com/300/400"
+          >
+        </figure>
+        <div class="flex-1 overflow-hidden flex flex-col md:gap-1 justify-between md:justify-start">
+          <h1
+            id="product-name"
+            class="text-xl md:text-2xl font-bold truncate"
+          >
+            Product Name Goes Here!!!!!
+          </h1>
+          <div class="text-lg md:text-xl font-semibold truncate">
+            Price: <span id="product-price">£400.99</span>
+          </div>
+          <div 
+            id="product-tags"
+            class="text-base md:text-lg truncate"
+          >
+            <span>Collection 1</span>
+            <span>Collection 2</span>
+            <span>Collection 3</span>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</component-modal>
+
+<script>
+(function() {
+  const searchModalEl = document.getElementById("search-modal");
+  const searchInputEl = searchModalEl.querySelector("input");
+  const resultsWrapperEl = searchModalEl.querySelector("#results-wrapper");
+  const resultItemTemplate = resultsWrapperEl.querySelector("#result-item").content;
+
+  const removeResultItems = () => {
+    [...resultsWrapperEl.children].forEach((childEl) => {
+      if (childEl.tagName === "TEMPLATE") return;
+
+      childEl.remove();
+    });
+  }
+
+  const renderResults = (products) => {
+    removeResultItems();
+
+    products.forEach((product) => {
+      const resultItemEl = resultItemTemplate.cloneNode(true);
+      const overlayEl = resultItemEl.querySelector("#overlay");
+      const mainImgEl = resultItemEl.querySelector("#main-image");
+      const productNameEl = resultItemEl.querySelector("#product-name");
+      const productPrice = resultItemEl.querySelector("#product-price");
+      const productTags = resultItemEl.querySelector("#product-tags");
+
+      overlayEl.href = product.url;
+      if (product.featured_image.url) {
+        mainImgEl.src = product.featured_image.url;
+      } else {
+        mainImgEl.src = "{{ 'no-image.gif' | img_url }}";
+      }
+      mainImgEl.alt = product.featured_image.alt;
+      productNameEl.innerText = product.title;
+      productPrice.innerText = `{{ localization.country.currency.symbol}}${product.price}`;
+      productTags.innerHTML = product.tags.join("&#x3164;");
+
+      resultsWrapperEl.appendChild(resultItemEl);
+    });
+  };
+
+  searchInputEl.addEventListener("input", (event) => {
+    removeResultItems();
+    if (!event.target.value) return;
+
+    fetch(window.Shopify.routes.root + `search/suggest.json?q=${event.target.value}&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=hide`)
+      .then(res => res.json())
+      .then(res => {
+        const products = res.resources.results.products;
+
+        if (products.length > 0) {
+          renderResults(products);
+        } else {
+          removeResultItems();
+        }
+      });
+  });
+
+})();
+</script>
+
+<script>
+(function() {
+  const el = document.getElementById("{{ section.id }}");
+  const menuButton = el.querySelector("#menu-button");
+  const cartButton = el.querySelector("#cart-button");
+  const searchButton = el.querySelector("#search-button");
+
+  menuButton.addEventListener("click", () => {
+    document.querySelector("#menu-sidebar").open();
+  });
+
+  cartButton.addEventListener("click", () => {
+    document.querySelector("#cart-sidebar").open();
+  });
+  
+  searchButton.addEventListener("click", () => {
+    document.querySelector("#search-modal").open();
+    document.querySelector("#search-modal").querySelector("input").focus()
+  });
+
+  const renderCartItem = (items) => {
+    const cartSidebarEl = document.getElementById("cart-sidebar");
+    const cartItemWrapperEl = cartSidebarEl.querySelector("#cart-item-wrapper");
+    const cartItemTemplate = cartSidebarEl.querySelector("#cart-item").content;
+
+    [...cartItemWrapperEl.children].forEach((childEl) => {
+      if (childEl.tagName === "TEMPLATE") return;
+
+      childEl.remove();
+    });
+    
+    items.forEach((item, index) => {
+      const cartItem = cartItemTemplate.cloneNode(true);
+      const mainImgEl = cartItem.querySelector("img");
+
+      mainImgEl.src = item.featured_image.url;
+      mainImgEl.alt = item.featured_image.alt;
+      cartItem.querySelector("#item-quantity").innerText = `${item.quantity}x`;
+      cartItem.querySelector("#item-name").innerText = item.product_title;
+      cartItem.querySelector("#item-variant").innerText = item.variant_title;
+      cartItem.querySelector("#item-price").innerText = `${formatMoney(
+        item.price,
+        "{{ localization.language.iso_code }}",
+        "{{ localization.country.currency.iso_code }}"
+      )} each`;
+      cartItem.querySelector("#item-delete-button").dataset.cartRemove = index + 1;
+
+
+      cartItemWrapperEl.appendChild(cartItem);
+    });
+  };
+
+  const setCartItemCount = (amount) => {
+    const itemCountEl = cartButton.querySelector("#item-count");
+
+    itemCountEl.innerText = amount;
+  };
+
+  const setCartSubtotal = (subtotal) => {
+    const subtotalEl = document.getElementById("cart-sidebar").querySelector("#subtotal-price");
+
+    subtotalEl.innerText = formatMoney(
+      subtotal,
+      "{{ localization.language.iso_code }}",
+      "{{ localization.country.currency.iso_code }}"
+    );
+
+  }
+
+  $(document).on('cart.ready', function(event, cart) {
+    setCartItemCount(cart.item_count);
+    renderCartItem(cart.items);
+    setCartSubtotal(cart.items_subtotal_price)
+  });
+
+  $(document).on('cart.requestComplete', function(event, cart) {
+    setCartItemCount(cart.item_count);
+    renderCartItem(cart.items);
+    setCartSubtotal(cart.items_subtotal_price)
+  });
+
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Navbar",
+  "tag": "header",
+  "class": "container my-4"
+}
+{% endschema %}

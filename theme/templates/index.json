@@ -1,0 +1,64 @@
+{
+	"name": "Index",
+	"wrapper": "div.flex.flex-col.gap-10",
+	"sections": {
+		"hero": {
+			"type": "hero",
+			"block_order": ["heading", "main_text", "main_button"],
+			"blocks": {
+				"heading": {
+					"type": "heading"
+				},
+				"main_text": {
+					"type": "main_text"
+				},
+				"main_button": {
+					"type": "main_button"
+				}
+			}
+		},
+		"cta": {
+			"type": "cta"
+		},
+		"cta-reversed": {
+			"type": "cta",
+			"settings": {
+				"card_order": "order-1"
+			}
+		},
+		"image-with-text": {
+			"type": "image-with-text",
+			"block_order": ["heading", "main_text", "main_button"],
+			"blocks": {
+				"heading": {
+					"type": "heading"
+				},
+				"main_text": {
+					"type": "main_text"
+				},
+				"main_button": {
+					"type": "main_button"
+				}
+			}
+		},
+		"highlight": {
+			"type": "highlight",
+			"block_order": ["info_card_1", "info_card_2", "info_card_3", "info_card_4"],
+			"blocks": {
+				"info_card_1": {
+					"type": "info_card"
+				},
+				"info_card_2": {
+					"type": "info_card"
+				},
+				"info_card_3": {
+					"type": "info_card"
+				},
+				"info_card_4": {
+					"type": "info_card"
+				}
+			}
+		}
+	},
+	"order": ["hero", "cta", "cta-reversed", "image-with-text", "highlight"]
+}

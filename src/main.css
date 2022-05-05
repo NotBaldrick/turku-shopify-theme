@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html,
+	body {
+		@apply bg-base-100 text-base-content w-full min-h-screen;
+		background-repeat: repeat;
+		background-position: 1rem 1rem;
+		background-size: 40px 40px;
+		background-image: linear-gradient(to right, theme("colors.base-300") 1px, transparent 1px),
+			linear-gradient(to bottom, theme("colors.base-300") 1px, transparent 1px);
+		transition: background-position 3s;
+	}
+	hr {
+		border: none;
+	}
+}
+
+@layer components {
+	/* -------------------------------------------------------------------------- */
+	/*                          ANCHOR - Component Button                         */
+	/* -------------------------------------------------------------------------- */
+	.btn {
+		@apply no-animation;
+	}
+	.btn-outline {
+		@apply border-2;
+	}
+	.btn:hover,
+	.btn:active {
+		@apply scale-95;
+	}
+	.btn.loading {
+		@apply opacity-75 animate-pulse;
+	}
+	.btn.loading::before {
+		@apply hidden;
+	}
+	/* -------------------------------------------------------------------------- */
+	/*                         ANCHOR - Component Divider                         */
+	/* -------------------------------------------------------------------------- */
+	.divider {
+		@apply my-0.5 md:my-2;
+	}
+	/* -------------------------------------------------------------------------- */
+	/*                         ANCHOR - Component Collapse                        */
+	/* -------------------------------------------------------------------------- */
+	.collapse-content {
+		@apply overflow-hidden transition-none;
+	}
+	.collapse input[type="checkbox"]:checked ~ .collapse-title .collapse-icon-off,
+	.collapse input[type="checkbox"] ~ .collapse-title .collapse-icon-on {
+		@apply hidden;
+	}
+	.collapse input[type="checkbox"]:checked ~ .collapse-title .collapse-icon-on {
+		@apply block;
+	}
+	.collapse-open .collapse-content,
+	.collapse:focus:not(.collapse-close) .collapse-content,
+	.collapse:not(.collapse-close) input[type="checkbox"]:checked ~ .collapse-content {
+		@apply overflow-visible;
+	}
+	/* -------------------------------------------------------------------------- */
+	/*                          ANCHOR - Component Select                         */
+	/* -------------------------------------------------------------------------- */
+	.select {
+		@apply border-2 border-neutral;
+	}
+}

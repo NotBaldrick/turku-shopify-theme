@@ -1,0 +1,69 @@
+[
+	{
+		"name": "theme_info",
+		"theme_name": "Turku",
+		"theme_version": "1.0.0",
+		"theme_author": "NotBaldrick",
+		"theme_documentation_url": "https://help.shopify.com/en/manual/online-store/themes",
+		"theme_support_url": "https://support.shopify.com/"
+	},
+	{
+		"name": "t:settings_schema.colors.name",
+		"settings": [
+			{
+				"type": "color",
+				"id": "colors_primary",
+				"default": "#570DF8",
+				"label": "t:settings_schema.colors.settings.primary.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_secondary",
+				"default": "#F000B8",
+				"label": "t:settings_schema.colors.settings.secondary.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_accent",
+				"default": "#37CDBE",
+				"label": "t:settings_schema.colors.settings.accent.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_neutral",
+				"default": "#3D4451",
+				"label": "t:settings_schema.colors.settings.neutral.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_base",
+				"default": "#FFFFFF",
+				"label": "t:settings_schema.colors.settings.base.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_info",
+				"default": "#3ABFF8",
+				"label": "t:settings_schema.colors.settings.info.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_success",
+				"default": "#36D399",
+				"label": "t:settings_schema.colors.settings.success.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_warning",
+				"default": "#FBBD23",
+				"label": "t:settings_schema.colors.settings.warning.label"
+			},
+			{
+				"type": "color",
+				"id": "colors_error",
+				"default": "#F87272",
+				"label": "t:settings_schema.colors.settings.error.label"
+			}
+		]
+	}
+]
