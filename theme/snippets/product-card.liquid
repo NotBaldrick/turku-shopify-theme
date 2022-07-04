@@ -28,7 +28,10 @@
         >
       {% endif %}
     </a>
-    <button class="btn btn-circle btn-ghost absolute top-0.5 right-1 swap swap-rotate hover:swap-active z-10">
+    <button
+      class="btn btn-circle btn-ghost absolute top-0.5 right-1 swap swap-rotate hover:swap-active z-10"
+      data-cart-add="{{ product.first_available_variant.id }}"
+    >
       {% render 'icon',
         type: 'shopping-bag',
         class: 'w-8 h-8 swap-off'

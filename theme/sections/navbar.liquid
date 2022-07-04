@@ -94,7 +94,7 @@
       <span>Subtotal:</span>
       <span id="subtotal-price">$300</span>
     </div>
-    <a href="/checkout">
+    <a id="checkout-button" href="/checkout">
       <button class="btn btn-outline btn-primary btn-xl w-full">
         Checkout
       </button>
@@ -232,6 +232,7 @@
   const renderCartItem = (items) => {
     const cartSidebarEl = document.getElementById("cart-sidebar");
     const cartItemWrapperEl = cartSidebarEl.querySelector("#cart-item-wrapper");
+    const checkoutButtonEl = cartSidebarEl.querySelector("#checkout-button");
     const cartItemTemplate = cartSidebarEl.querySelector("#cart-item").content;
 
     [...cartItemWrapperEl.children].forEach((childEl) => {
@@ -239,6 +240,9 @@
 
       childEl.remove();
     });
+
+    checkoutButtonEl.style.pointerEvents = items.length === 0 ? "none" : "auto"
+    checkoutButtonEl.style.opacity = items.length === 0 ? "0.5" : "1"
     
     items.forEach((item, index) => {
       const cartItem = cartItemTemplate.cloneNode(true);
@@ -275,7 +279,6 @@
       "{{ localization.language.iso_code }}",
       "{{ localization.country.currency.iso_code }}"
     );
-
   }
 
   $(document).on('cart.ready', function(event, cart) {
